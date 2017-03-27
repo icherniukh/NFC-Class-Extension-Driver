@@ -38,12 +38,14 @@ phNciNfc_SequenceP_t gphNciNfc_InitSequence[] = {
 /*Global Varibales for Release Sequence Handler*/
 phNciNfc_SequenceP_t gphNciNfc_ReleaseSequence[] = {
     {&phNciNfc_SendReset, &phNciNfc_ProcessResetRsp},
+    {&phNciNfc_DelayForResetNtf, NULL},
     {NULL, &phNciNfc_CompleteReleaseSequence}
 };
 
 /*Global Varibales for Nfcc reset sequence*/
 phNciNfc_SequenceP_t gphNciNfc_NfccResetSequence[] = {
     {&phNciNfc_SendReset, &phNciNfc_ProcessResetRsp},
+    {&phNciNfc_DelayForResetNtf, NULL},
     {NULL, &phNciNfc_CompleteNfccResetSequence}
 };
 
@@ -428,7 +430,7 @@ NFCSTATUS phNciNfc_DelayForResetNtf(void* pContext)
     NFCSTATUS wStatus = NFCSTATUS_SUCCESS;
     pphNciNfc_Context_t pNciContext = (pphNciNfc_Context_t)pContext;
     PH_LOG_NCI_FUNC_ENTRY();
-    if (NULL != pNciContext)
+    if (NULL == pNciContext)
     {
         wStatus = NFCSTATUS_INVALID_STATE;
     }
@@ -485,7 +487,11 @@ static NFCSTATUS phNciNfc_ProcessResetRsp(void *pContext, NFCSTATUS Status)
             }
             else if (pNciContext->RspBuffInfo.wLen == PHNCINFC_CORE_RESET_RSP_LEN_NCI2x)
             {
-                if (pNciContext->RspBuffInfo.pBuff[0] != PH_NCINFC_STATUS_OK)
+                if (pNciContext->RspBuffInfo.pBuff[0] == PH_NCINFC_STATUS_OK)
+                {
+                    wStatus = NFCSTATUS_SUCCESS;
+                }
+                else
                 {
                     PH_LOG_NCI_CRIT_STR("CORE_RESET_RSP was received with Status Code == 0x%02x", pNciContext->RspBuffInfo.pBuff[0]);
                     wStatus = NFCSTATUS_FAILED;
@@ -505,6 +511,7 @@ static NFCSTATUS phNciNfc_ProcessResetRsp(void *pContext, NFCSTATUS Status)
         if (wStatus == NFCSTATUS_SUCCESS && 0 == pNciContext->tInitInfo.bSkipRegisterAllNtfs)
         {
             wStatus = phNciNfc_RegAllNtfs(pNciContext);
+            pNciContext->tInitInfo.bSkipRegisterAllNtfs = 1;
         }
     }
     else
