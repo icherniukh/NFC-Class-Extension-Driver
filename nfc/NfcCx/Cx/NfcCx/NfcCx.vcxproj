@@ -102,11 +102,11 @@
       <WppModuleName>NfcCx</WppModuleName>
       <WppScanConfigurationData>..\NfcCxTracing.h</WppScanConfigurationData>
       <WppAdditionalOptions>-scan:"..\..\..\libs\NfcCoreLib\inc\phNfcTraceEnums.h" %(WppAdditionalOptions)</WppAdditionalOptions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DDK_INC_PATH);..\..\WdfCxProxy\inc;..\..\..\inc;..\..\..\inc\Wdf;..\..\..\libs\NfcCoreLib\inc;..\..\..\libs\SmartCard\inc;..\..\..\libs\Proximity\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(DDK_INC_PATH);$(Winrt_IncludePath);..\..\WdfCxProxy\inc;..\..\..\inc;..\..\..\inc\Wdf;..\..\..\libs\NfcCoreLib\inc;..\..\..\libs\SmartCard\inc;..\..\..\libs\Proximity\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(SolutionDir)libs\$(Platform)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);WdfCxProxy.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);WdfCxProxy.lib;legacy_stdio_definitions.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
