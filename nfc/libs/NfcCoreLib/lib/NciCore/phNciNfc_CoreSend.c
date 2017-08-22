@@ -520,8 +520,13 @@ static NFCSTATUS phNciNfc_CoreRegisterForNotifications(void *pContext)
             }
             else
             {
-                /* Critical error: No message shall be sent except Command and Data */
+                PH_LOG_NCI_CRIT_STR("Critical error. No message shall be sent except Command and Data");
+                wStatus = NFCSTATUS_INVALID_STATE;
+                goto Done;
             }
+
+            PH_LOG_NCI_INFO_STR("Registering callback for eMsgType=%!phNciNfc_NciCoreMsgType_t!", eMsgType);
+
             /*Register with Response Manager and start timer*/
             phOsalNfc_MemCopy(&tHeaderInfo,
                                 &(pCtx->TxInfo.tHeaderInfo),
@@ -576,7 +581,7 @@ static NFCSTATUS phNciNfc_CoreRegisterForNotifications(void *pContext)
                         pCtx->TimerInfo.PktHeaderInfo.eMsgType = eMsgType;
                     }else
                     {
-                        PH_LOG_NCI_INFO_STR("Response timer start failed");
+                        PH_LOG_NCI_INFO_STR("Response timer start failed:%!NFCSTATUS!", wStatus);
                     }
                 }else
                 {
@@ -584,10 +589,11 @@ static NFCSTATUS phNciNfc_CoreRegisterForNotifications(void *pContext)
                 }
             }else
             {
-                PH_LOG_NCI_INFO_STR("No Timer for responses !!!");
+                PH_LOG_NCI_INFO_STR("No Timer for responses !!! errot:%!NFCSTATUS!", wStatus);
             }
         }
     }
+Done:
     PH_LOG_NCI_FUNC_EXIT();
     return wStatus;
 }
@@ -706,9 +712,9 @@ static NFCSTATUS phNciNfc_StateWaitCredit2Send(void *pContext)
 {
     NFCSTATUS wStatus = NFCSTATUS_SUCCESS;
     PH_LOG_NCI_FUNC_ENTRY();
-    
+
     wStatus = phNciNfc_CoreRegisterForNotifications(pContext);
-    
+
     PH_LOG_NCI_FUNC_EXIT();
     return wStatus;
 }

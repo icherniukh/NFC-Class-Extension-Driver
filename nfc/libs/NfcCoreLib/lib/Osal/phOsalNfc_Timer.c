@@ -8,7 +8,7 @@
 
 #include "phOsalNfc_Timer.tmh"
 
-static void phOsalNfc_TimerDeferredCall(void *pParam) 
+static void phOsalNfc_TimerDeferredCall(void *pParam)
 {
     uint32_t uIndex = (uint32_t)(ULONG_PTR)pParam;
 
@@ -30,11 +30,11 @@ static void CALLBACK phOsalNfc_TimerCallback(PTP_CALLBACK_INSTANCE pInstance, PV
     if (gpphOsalNfc_Context != NULL)
     {
         EnterCriticalSection(&gpphOsalNfc_Context->TimerLock);
-        
+
         if (gpphOsalNfc_Context->TimerList[uIndex].pCallback != NULL) {
             gpphOsalNfc_Context->TimerList[uIndex].bFired = TRUE;
-            phOsalNfc_PostMsg(PH_OSALNFC_TIMER_MSG, 
-                             (UINT_PTR)phOsalNfc_TimerDeferredCall, 
+            phOsalNfc_PostMsg(PH_OSALNFC_TIMER_MSG,
+                             (UINT_PTR)phOsalNfc_TimerDeferredCall,
                              (UINT_PTR)uIndex,
                              (UINT_PTR)NULL,
                              (UINT_PTR)NULL);
@@ -61,7 +61,7 @@ void phOsalNfc_Timer_DeInit(void)
     {
         EnterCriticalSection(&gpphOsalNfc_Context->TimerLock);
 
-        while (i < PH_MAX_OSAL_NUM_TIMERS) 
+        while (i < PH_MAX_OSAL_NUM_TIMERS)
         {
             if(gpphOsalNfc_Context->TimerList[i].pTimer != NULL)
             {
@@ -82,12 +82,13 @@ uint32_t phOsalNfc_Timer_Create(void)
     uint32_t i = 0;
 
     if (NULL == gpphOsalNfc_Context) {
+        PH_LOG_OSAL_CRIT_STR("Timer_Create: returning 0, error: Context is NULL");
         return PH_OSALNFC_TIMER_ID_INVALID;
     }
 
     EnterCriticalSection(&gpphOsalNfc_Context->TimerLock);
 
-    while (i < PH_MAX_OSAL_NUM_TIMERS) 
+    while (i < PH_MAX_OSAL_NUM_TIMERS)
     {
         /* check whether the timer is free. If free then only it is created */
         if(gpphOsalNfc_Context->TimerList[i].pTimer == NULL)
@@ -104,16 +105,18 @@ uint32_t phOsalNfc_Timer_Create(void)
 
     if ((i == PH_MAX_OSAL_NUM_TIMERS) || (gpphOsalNfc_Context->TimerList[i].pTimer == NULL))
     {
+        PH_LOG_OSAL_CRIT_STR("Timer_Create: returning 0, error: Can't create a timer");
         return PH_OSALNFC_TIMER_ID_INVALID;
     }
 
+    PH_LOG_OSAL_INFO_STR("Timer_Create: returning %u", i + PH_OSAL_TIMER_BASE_ADDRESS);
     return (i + PH_OSAL_TIMER_BASE_ADDRESS);
 }
 
 
-/* This starts the timer */ 
+/* This starts the timer */
 NFCSTATUS phOsalNfc_Timer_Start(uint32_t    TimerId,
-                          uint32_t     dueTimeMsec, 
+                          uint32_t     dueTimeMsec,
                           ppCallBck_t  pCallback,
                           void         *pContext)
 {
@@ -123,11 +126,12 @@ NFCSTATUS phOsalNfc_Timer_Start(uint32_t    TimerId,
 
     if (NULL == gpphOsalNfc_Context ||
         PH_OSALNFC_TIMER_ID_INVALID == TimerId) {
+        PH_LOG_OSAL_CRIT_STR("Timer_Start:(id=%u) returning NFCSTATUS_INVALID_PARAMETER", TimerId);
         return PHNFCSTVAL(CID_NFC_OSAL, NFCSTATUS_INVALID_PARAMETER);
     }
 
     uIndex = TimerId - PH_OSAL_TIMER_BASE_ADDRESS;
-    
+
     // Convert dueTimeMsec to relative filetime units (100ns)
     DueTime = Int32x32To64(dueTimeMsec, -10000);
 
@@ -139,6 +143,7 @@ NFCSTATUS phOsalNfc_Timer_Start(uint32_t    TimerId,
 
     LeaveCriticalSection(&gpphOsalNfc_Context->TimerLock);
 
+    PH_LOG_OSAL_INFO_STR("Timer_Start:(id=%u) returning NFCSTATUS_SUCCESS", TimerId);
     return NFCSTATUS_SUCCESS;
 }
 
@@ -146,6 +151,7 @@ NFCSTATUS phOsalNfc_Timer_Start(uint32_t    TimerId,
 NFCSTATUS phOsalNfc_Timer_Stop(uint32_t TimerId)
 {
     uint32_t  uIndex;
+    PH_LOG_OSAL_INFO_STR("Timer_Stop:(id=%u)", TimerId);
 
     if (NULL == gpphOsalNfc_Context ||
         PH_OSALNFC_TIMER_ID_INVALID == TimerId)
@@ -154,7 +160,7 @@ NFCSTATUS phOsalNfc_Timer_Stop(uint32_t TimerId)
     }
 
     uIndex = TimerId - PH_OSAL_TIMER_BASE_ADDRESS;
-    
+
     SetThreadpoolTimer(gpphOsalNfc_Context->TimerList[uIndex].pTimer, NULL, 0, 0);
     WaitForThreadpoolTimerCallbacks(gpphOsalNfc_Context->TimerList[uIndex].pTimer, TRUE);
 
@@ -167,18 +173,18 @@ NFCSTATUS phOsalNfc_Timer_Stop(uint32_t TimerId)
     LeaveCriticalSection(&gpphOsalNfc_Context->TimerLock);
     return NFCSTATUS_SUCCESS;
 }
-    
+
 
 void phOsalNfc_Timer_Delete(uint32_t TimerId)
 {
     uint32_t uIndex;
-
+    PH_LOG_OSAL_INFO_STR("Timer_Delete:(id=%u)", TimerId);
     //
     // In various places in the code, timers are initialized only
     // after they are first needed.  Despite this fact, they are
     // deleted unconditionally when their context is being deleted
     // Intead of adding an if statement in all places where
-    // timers are being deleted, this check is added to prevent 
+    // timers are being deleted, this check is added to prevent
     // a NULL deref.
     //
     if (NULL == gpphOsalNfc_Context ||
@@ -191,11 +197,11 @@ void phOsalNfc_Timer_Delete(uint32_t TimerId)
 
     EnterCriticalSection(&gpphOsalNfc_Context->TimerLock);
 
-    if(gpphOsalNfc_Context->TimerList[uIndex].pTimer != NULL) 
+    if(gpphOsalNfc_Context->TimerList[uIndex].pTimer != NULL)
     {
         SetThreadpoolTimer(gpphOsalNfc_Context->TimerList[uIndex].pTimer, NULL, 0, 0);
         LeaveCriticalSection(&gpphOsalNfc_Context->TimerLock);
-        
+
         WaitForThreadpoolTimerCallbacks(gpphOsalNfc_Context->TimerList[uIndex].pTimer, TRUE);
 
         EnterCriticalSection(&gpphOsalNfc_Context->TimerLock);
@@ -207,7 +213,7 @@ void phOsalNfc_Timer_Delete(uint32_t TimerId)
         gpphOsalNfc_Context->TimerList[uIndex].bFired    = FALSE;
 
         uIndex = 0;
-        while (uIndex < PH_MAX_OSAL_NUM_TIMERS) 
+        while (uIndex < PH_MAX_OSAL_NUM_TIMERS)
         {
             if (gpphOsalNfc_Context->TimerList[uIndex].pTimer != NULL)
             {

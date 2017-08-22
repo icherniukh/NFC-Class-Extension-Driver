@@ -150,7 +150,7 @@ void SnepSocketSendCb (void *pContext, NFCSTATUS status)
             else
             {
                 iFragmentLength = ((pClientSessionContext->putGetDataContext.pSnepPacket->length - pClientSessionContext->putGetDataContext.iDataSent) < pClientSessionContext->iRemoteMiu)?
-                                                (pClientSessionContext->putGetDataContext.pSnepPacket->length - pClientSessionContext->putGetDataContext.iDataSent) : 
+                                                (pClientSessionContext->putGetDataContext.pSnepPacket->length - pClientSessionContext->putGetDataContext.iDataSent) :
                                                 (pClientSessionContext->iRemoteMiu);
 
                 memcpy(pClientSessionContext->putGetDataContext.pProcessingBuffer->buffer,
@@ -312,7 +312,7 @@ void LlcpSocketSendResponseCb (void *pContext, NFCSTATUS status)
                 else
                 {
                     iFragmentLength = ((pSnepServerConnection->responseDataContext.pSnepPacket->length - pSnepServerConnection->responseDataContext.iDataSent) < pSnepServerConnection->iRemoteMiu) ?
-                                           (pSnepServerConnection->responseDataContext.pSnepPacket->length - pSnepServerConnection->responseDataContext.iDataSent) : 
+                                           (pSnepServerConnection->responseDataContext.pSnepPacket->length - pSnepServerConnection->responseDataContext.iDataSent) :
                                            (pSnepServerConnection->iRemoteMiu);
 
 
@@ -923,7 +923,7 @@ void sendSnepRequestContinue(pphLibNfc_SnepClientSession_t pClientSessionContext
 {
     uint8_t *pSnepPktTraverse = pClientSessionContext->putGetDataContext.pProcessingBuffer->buffer ;
     NFCSTATUS ret = NFCSTATUS_SUCCESS;
-    
+
     memset(pSnepPktTraverse, 0, pClientSessionContext->iRemoteMiu);
     *pSnepPktTraverse = SNEP_VERSION;
     pSnepPktTraverse += SNEP_VERSION_LENGTH;
@@ -959,7 +959,7 @@ void sendSnepRequestReject(pphLibNfc_SnepClientSession_t pClientSessionContext)
 {
     uint8_t *pSnepPktTraverse = pClientSessionContext->putGetDataContext.pProcessingBuffer->buffer ;
     NFCSTATUS ret = NFCSTATUS_SUCCESS;
-    
+
     memset(pSnepPktTraverse, 0, pClientSessionContext->iRemoteMiu);
     *pSnepPktTraverse = SNEP_VERSION;
     pSnepPktTraverse += SNEP_VERSION_LENGTH;
@@ -1098,7 +1098,7 @@ void phLibNfc_ClearMemNCallResponseCb(pphLibNfc_SnepServerConnection_t pSnepServ
     if (NFCSTATUS_PENDING != ret &&
         NFCSTATUS_SUCCESS != ret)
     {
-        PH_LOG_SNEP_CRIT_STR("RECEIVE FAILURE");
+        PH_LOG_SNEP_CRIT_STR("RECEIVE FAILURE, error:%!NFCSTATUS!", status);
     }
     PH_LOG_SNEP_FUNC_EXIT();
 }
