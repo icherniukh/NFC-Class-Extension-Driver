@@ -1098,7 +1098,7 @@ void phLibNfc_ClearMemNCallResponseCb(pphLibNfc_SnepServerConnection_t pSnepServ
     if (NFCSTATUS_PENDING != ret &&
         NFCSTATUS_SUCCESS != ret)
     {
-        PH_LOG_SNEP_CRIT_STR("RECEIVE FAILURE, error:%!NFCSTATUS!", status);
+        PH_LOG_SNEP_CRIT_STR("RECEIVE FAILURE, inputStatus:%!NFCSTATUS!, returnStatus:%!NFCSTATUS%", status, ret);
     }
     PH_LOG_SNEP_FUNC_EXIT();
 }
