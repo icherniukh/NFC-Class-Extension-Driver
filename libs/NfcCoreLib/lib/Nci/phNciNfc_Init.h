@@ -8,6 +8,7 @@
 
 #include <phNfcStatus.h>
 
+// Table 9: NFCC Features [NCI v1.0]
 #define PHNCINFC_DISCFREQCONFIG_BITMASK         (0x01)
 #define PHNCINFC_DISCCONFIGMODE_BITMASK         (0x06)
 
@@ -17,6 +18,10 @@
 
 #define PHNCINFC_BATTOFFSTATE_BITMASK           (0x01)
 #define PHNCINFC_SWITCHOFFSTATE_BITMASK         (0x02)
+
+// Table 10: NFCC Features [NCI v2.0]
+#define PHNCINFC_HCI_NETWORK_SUPPORT_BITMASK    (0x08)
+
 
 extern phNciNfc_SequenceP_t gphNciNfc_InitSequence[];
 extern phNciNfc_SequenceP_t gphNciNfc_ReleaseSequence[];

@@ -331,19 +331,19 @@ void phNciNfc_PrintCoreInitNci1xRspDescription(uint8_t *pBuff, uint16_t wLen)
         PH_LOG_NCI_INFO_STR("Discovery Configuration Mode:");
 
         PHNCINFC_VALIDATE_PACKET_LENGTH(bIndex+4, wLen);
-        tNfccFeatures.DiscConfSuprt = pBuff[bIndex++];
+        tNfccFeatures.DiscoveryConfiguration = pBuff[bIndex++];
         tNfccFeatures.RoutingType = pBuff[bIndex++];
         tNfccFeatures.PwrOffState = pBuff[bIndex++];
         tNfccFeatures.Byte3 = pBuff[bIndex++];
 
-        if (tNfccFeatures.DiscConfSuprt & 0x01) {
+        if (tNfccFeatures.DiscoveryConfiguration & 0x01) {
             PH_LOG_NCI_INFO_STR("Discovery Frequency supported");
         }
         else {
             PH_LOG_NCI_INFO_STR("Discovery Frequency value is ignored");
         }
 
-        if ((tNfccFeatures.DiscConfSuprt & 0x06) == 0x00) {
+        if ((tNfccFeatures.DiscoveryConfiguration & 0x06) == 0x00) {
             PH_LOG_NCI_INFO_STR("DH is the only entity that configures the NFCC");
         }
         else {
@@ -406,19 +406,19 @@ void phNciNfc_PrintCoreInitNci2xRspDescription(uint8_t *pBuff, uint16_t wLen)
         PH_LOG_NCI_INFO_STR("Discovery Configuration Mode:");
 
         PHNCINFC_VALIDATE_PACKET_LENGTH(bIndex + 4, wLen);
-        tNfccFeatures.DiscConfSuprt = pBuff[bIndex++];
+        tNfccFeatures.DiscoveryConfiguration = pBuff[bIndex++];
         tNfccFeatures.RoutingType = pBuff[bIndex++];
         tNfccFeatures.PwrOffState = pBuff[bIndex++];
         tNfccFeatures.Byte3 = pBuff[bIndex++];
 
-        if (tNfccFeatures.DiscConfSuprt & 0x01) {
+        if (tNfccFeatures.DiscoveryConfiguration & 0x01) {
             PH_LOG_NCI_INFO_STR("Discovery Frequency supported");
         }
         else {
             PH_LOG_NCI_INFO_STR("Discovery Frequency value is ignored");
         }
 
-        if ((tNfccFeatures.DiscConfSuprt & 0x06) == 0x00) {
+        if ((tNfccFeatures.DiscoveryConfiguration & 0x06) == 0x00) {
             PH_LOG_NCI_INFO_STR("DH is the only entity that configures the NFCC");
         }
         else {

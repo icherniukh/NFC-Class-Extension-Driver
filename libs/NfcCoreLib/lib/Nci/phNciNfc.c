@@ -1758,9 +1758,9 @@ NFCSTATUS phNciNfc_GetNfccFeatures(void *pNciCtx,
     else if(NULL != pNfccFeatures)
     {
         /* Get NFCC features from Init response message */
-        pNfccFeatures->DiscConfigInfo.DiscFreqConfig = (pNciContext->InitRspParams.NfccFeatures.DiscConfSuprt &
+        pNfccFeatures->DiscConfigInfo.DiscFreqConfig = (pNciContext->InitRspParams.NfccFeatures.DiscoveryConfiguration &
                                                         PHNCINFC_DISCFREQCONFIG_BITMASK);
-        pNfccFeatures->DiscConfigInfo.DiscConfigMode = ((pNciContext->InitRspParams.NfccFeatures.DiscConfSuprt &
+        pNfccFeatures->DiscConfigInfo.DiscConfigMode = ((pNciContext->InitRspParams.NfccFeatures.DiscoveryConfiguration &
                                                         PHNCINFC_DISCCONFIGMODE_BITMASK) >> 1);
         pNfccFeatures->RoutingInfo.TechnBasedRouting = ((pNciContext->InitRspParams.NfccFeatures.RoutingType &
                                                         PHNCINFC_TECHNBASEDRTNG_BITMASK) >> 1);
