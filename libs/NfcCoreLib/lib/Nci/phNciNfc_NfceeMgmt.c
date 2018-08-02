@@ -161,7 +161,9 @@ static NFCSTATUS phNciNfc_CompleteModeSetSequence(void *pContext, NFCSTATUS wSta
         // no errors then host should wait for NFCEE_MODE_SET_NTF.
         if (phNciNfc_IsVersion1x(pNciCtx) || wStatus != NFCSTATUS_SUCCESS)
         {
-            phNciNfc_Notify(pNciCtx, wStatus, NULL);
+            pNciCtx->IfModeSetNtf(pNciCtx->IfModeSetNtfCtx, wStatus, NULL);
+            pNciCtx->IfModeSetNtf = NULL;
+            pNciCtx->IfModeSetNtfCtx = NULL;
         }
     }
     PH_LOG_NCI_FUNC_EXIT();
@@ -729,7 +731,9 @@ static NFCSTATUS phNciNfc_NfceeModeSetNtfHandler(void *pContext,
         }
     }
 
-    phNciNfc_Notify(pCtx, wStatus, NULL);
+    pCtx->IfModeSetNtf(pCtx->IfModeSetNtfCtx, wStatus, NULL);
+    pCtx->IfModeSetNtf = NULL;
+    pCtx->IfModeSetNtfCtx = NULL;
 
     PH_LOG_NCI_FUNC_EXIT();
     return wStatus;
