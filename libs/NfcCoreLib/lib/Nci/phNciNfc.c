@@ -647,19 +647,8 @@ NFCSTATUS phNciNfc_Nfcee_ModeSet(void * pNciHandle,
             pNciContext->tSendPayload.pBuff = pTargetInfo;
             pNciContext->tSendPayload.wPayloadSize = (uint16_t)PHNCINFC_NFCEEMODESET_PAYLOADLEN;
 
-            if (phNciNfc_IsVersion1x(pNciContext))
-            {
-                // In NCI 1.x upper layer callback is always called on NFCEE_MODE_SET_RSP
-                phNciNfc_SetUpperLayerCallback(pNciContext, pNotifyCb, pContext);
-            }
-            else
-            {
-                // In NCI 2.x upper layer callback is called:
-                // - on NFCEE_MODE_SET_*RSP* if Status in the RSP is an error
-                // - on NFCEE_MODE_SET_*NTF* if Status in the RSP is OK
-                pNciContext->IfModeSetNtf = pNotifyCb;
-                pNciContext->IfModeSetNtfCtx = pContext;
-            }
+            pNciContext->IfModeSetNtf = pNotifyCb;
+            pNciContext->IfModeSetNtfCtx = pContext;
 
             PHNCINFC_INIT_SEQUENCE(pNciContext, gphNciNfc_ModeSetSequence);
             wStatus = phNciNfc_GenericSequence(pNciContext, NULL, wStatus);
@@ -1671,6 +1660,8 @@ static void phNciNfc_ClearNciContext(void* pNciContext)
 
         pNciCtx->IfNtf = NULL;
         pNciCtx->IfNtfCtx = NULL;
+        pNciCtx->IfModeSetNtf = NULL;
+        pNciCtx->IfModeSetNtfCtx = NULL;
         pNciCtx->pSeqHandler = NULL;
         pNciCtx->SeqNext = 0;
         pNciCtx->SeqMax = 0;

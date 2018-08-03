@@ -26,6 +26,8 @@ void phNciNfc_NciCtxInitialize(pphNciNfc_Context_t pNciCtx)
         pNciCtx->tSendPayload.pBuff = NULL;
         pNciCtx->IfNtf = NULL;
         pNciCtx->IfNtfCtx = NULL;
+        pNciCtx->IfModeSetNtf = NULL;
+        pNciCtx->IfModeSetNtfCtx = NULL;
         pNciCtx->pSeqHandler = NULL;
         pNciCtx->RspBuffInfo.pBuff = NULL;
         pNciCtx->tTranscvCtxt.pNotify = NULL;
