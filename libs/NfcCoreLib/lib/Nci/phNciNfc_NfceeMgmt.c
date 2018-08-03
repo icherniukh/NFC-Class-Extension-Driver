@@ -164,10 +164,10 @@ static NFCSTATUS phNciNfc_CompleteModeSetSequence(void *pContext, NFCSTATUS wSta
         if (phNciNfc_IsVersion1x(pNciCtx) || wStatus != NFCSTATUS_SUCCESS)
         {
             PH_LOG_NCI_INFO_STR("Invoking upper layer callback for Nfcee Mode Set");
-            pUpperLayerCb = pNciCtx->IfModeSetNtf;
-            pUpperLayerCtx = pNciCtx->IfModeSetNtfCtx;
-            pNciCtx->IfModeSetNtf = NULL;
-            pNciCtx->IfModeSetNtfCtx = NULL;
+            pUpperLayerCb = pNciCtx->ModeSetCallback;
+            pUpperLayerCtx = pNciCtx->ModeSetCallbackContext;
+            pNciCtx->ModeSetCallback = NULL;
+            pNciCtx->ModeSetCallbackContext = NULL;
 
             pUpperLayerCb(pUpperLayerCtx, wStatus, NULL);
         }
@@ -739,13 +739,13 @@ static NFCSTATUS phNciNfc_NfceeModeSetNtfHandler(void *pContext,
         }
     }
 
-    if (pCtx != NULL && pCtx->IfModeSetNtf != NULL)
+    if (pCtx != NULL && pCtx->ModeSetCallback != NULL)
     {
         PH_LOG_NCI_INFO_STR("Invoking upper layer callback for Nfcee Mode Set");
-        pUpperLayerCb = pCtx->IfModeSetNtf;
-        pUpperLayerCtx = pCtx->IfModeSetNtfCtx;
-        pCtx->IfModeSetNtf = NULL;
-        pCtx->IfModeSetNtfCtx = NULL;
+        pUpperLayerCb = pCtx->ModeSetCallback;
+        pUpperLayerCtx = pCtx->ModeSetCallbackContext;
+        pCtx->ModeSetCallback = NULL;
+        pCtx->ModeSetCallbackContext = NULL;
 
         pUpperLayerCb(pUpperLayerCtx, wStatus, NULL);
     }

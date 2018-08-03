@@ -647,8 +647,8 @@ NFCSTATUS phNciNfc_Nfcee_ModeSet(void * pNciHandle,
             pNciContext->tSendPayload.pBuff = pTargetInfo;
             pNciContext->tSendPayload.wPayloadSize = (uint16_t)PHNCINFC_NFCEEMODESET_PAYLOADLEN;
 
-            pNciContext->IfModeSetNtf = pNotifyCb;
-            pNciContext->IfModeSetNtfCtx = pContext;
+            pNciContext->ModeSetCallback = pNotifyCb;
+            pNciContext->ModeSetCallbackContext = pContext;
 
             PHNCINFC_INIT_SEQUENCE(pNciContext, gphNciNfc_ModeSetSequence);
             wStatus = phNciNfc_GenericSequence(pNciContext, NULL, wStatus);
@@ -1660,8 +1660,8 @@ static void phNciNfc_ClearNciContext(void* pNciContext)
 
         pNciCtx->IfNtf = NULL;
         pNciCtx->IfNtfCtx = NULL;
-        pNciCtx->IfModeSetNtf = NULL;
-        pNciCtx->IfModeSetNtfCtx = NULL;
+        pNciCtx->ModeSetCallback = NULL;
+        pNciCtx->ModeSetCallbackContext = NULL;
         pNciCtx->pSeqHandler = NULL;
         pNciCtx->SeqNext = 0;
         pNciCtx->SeqMax = 0;

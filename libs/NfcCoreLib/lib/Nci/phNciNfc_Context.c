@@ -26,8 +26,8 @@ void phNciNfc_NciCtxInitialize(pphNciNfc_Context_t pNciCtx)
         pNciCtx->tSendPayload.pBuff = NULL;
         pNciCtx->IfNtf = NULL;
         pNciCtx->IfNtfCtx = NULL;
-        pNciCtx->IfModeSetNtf = NULL;
-        pNciCtx->IfModeSetNtfCtx = NULL;
+        pNciCtx->ModeSetCallback = NULL;
+        pNciCtx->ModeSetCallbackContext = NULL;
         pNciCtx->pSeqHandler = NULL;
         pNciCtx->RspBuffInfo.pBuff = NULL;
         pNciCtx->tTranscvCtxt.pNotify = NULL;
@@ -45,7 +45,6 @@ void phNciNfc_NciCtxInitialize(pphNciNfc_Context_t pNciCtx)
 void phNciNfc_SetUpperLayerCallback(pphNciNfc_Context_t nciContext, pphNciNfc_IfNotificationCb_t callbackFunction, void* callbackContext)
 {
     PH_LOG_NCI_FUNC_ENTRY();
-
 
     if (nciContext->IfNtf != NULL && nciContext->IfNtf != callbackFunction ||
         nciContext->IfNtfCtx != NULL && nciContext->IfNtfCtx != callbackContext)
