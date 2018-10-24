@@ -1,3 +1,26 @@
 @startuml
-Bob -> Alice : hello
+
+[*] -> StateIdle #Yellow
+StateIdle -right-> StateInit: HwActionStart
+
+StateInit -right-> StateRfIdle: Initialization Completed
+
+StateRfIdle -up-> StateRfIdle: Config
+StateRfIdle -down-> StateRfDiscovery: HwActionDiscovery
+
+StateInit -up-> StateShutdown #Pink: Timeout, Failed, Restart
+
+StateShutdown -down-> StateIdle: Shutdown Completed
+
+StateRfIdle -left-> StateShutdown: HwActionStop
+
+StateRfDiscovery -> StateRfDiscovered: RF_INTF_ACTIVATED_NTF
+
+StateRfDiscovered -up-> StateRfDiscovery: RF_DEACTIVATE_CMD/RSP\nRF_DEACTIVATE_NTF\nActivation Failed
+StateRfDiscovered -left-> StateRfDataXchg: Activation Complete
+
+StateRfDataXchg -up-> StateRecovery: CORE_RESET_NTF
+
+StateRecovery -up-> StateIdle: Recovery Failed
+
 @enduml
