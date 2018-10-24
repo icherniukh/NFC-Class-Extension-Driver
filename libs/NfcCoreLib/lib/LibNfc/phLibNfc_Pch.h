@@ -97,7 +97,6 @@ Environment:
 #include <time.h>
 #include <windows.h>
 #include <memory.h>
-#include <ntassert.h>
 #include <intsafe.h>
 #include <math.h>
 
